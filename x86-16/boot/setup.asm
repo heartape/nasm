@@ -56,18 +56,18 @@ start:
 
     mov ax,0x0000
     cld
-;将操作系统向前移动0x1000
-do_move:
-    mov es,ax
-    add ax,0x1000
-    cmp ax,0x9000
-    jz  end_move
-    mov ds,ax
-    sub di,di
-    sub si,si
-    mov cx,0x8000
-    rep movsw
-    jmp do_move
+;将操作系统向前移动0x1000,但需要用bios的中断，所以先不覆盖
+; do_move:
+    ; mov es,ax
+    ; add ax,0x1000
+    ; cmp ax,0x9000
+    ; jz  end_move
+    ; mov ds,ax
+    ; sub di,di
+    ; sub si,si
+    ; mov cx,0x8000
+    ; rep movsw
+    ; jmp do_move
 
 end_move:
 
@@ -79,6 +79,7 @@ end_move:
 
     sti
 
-    jmp 0:0            ; 跳转head.asm
+    ; jmp 0:0            ; 跳转head.asm
+    jmp 0x1000:0        ; 需要用bios的中断,所以从10000开始
 
     times 512*4 - ($ - $$) db 0

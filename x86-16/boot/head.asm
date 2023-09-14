@@ -1,4 +1,4 @@
-%include    'main.asm'
+%include    '..\system\main.asm'
 
 start:
 ; 32位保护模式步骤
