@@ -1,6 +1,6 @@
-INITSEG  equ 0x9000	; we move boot here - out of the way
-SYSSEG   equ 0x1000	; system loaded at 0x10000 (65536).
-SETUPSEG equ 0x9020	; this is the current segment
+;INITSEG  equ 0x9000	; we move boot here - out of the way
+;SYSSEG   equ 0x1000	; system loaded at 0x10000 (65536).
+;SETUPSEG equ 0x9020	; this is the current segment
 
 start:
     mov ax,0x9000
@@ -34,18 +34,18 @@ start:
     mov ax,0x0000
     mov ds,ax
     lds si,[4*0x41]
-    mov ax,INITSEG
+    mov ax,0x9000
     mov es,ax
     mov di,0x0080
     mov cx,0x10
     rep
     movsb
 
-; Get hd1 data - 获取第二块硬盘的信息。
+;Get hd1 data - 获取第二块硬盘的信息。
     mov ax,0x0000
     mov ds,ax
     lds si,[4*0x46]
-    mov ax,INITSEG
+    mov ax,0x9000
     mov es,ax
     mov di,0x0090
     mov cx,0x10
@@ -71,33 +71,14 @@ do_move:
 
 end_move:
 
-
-;对可编程中断控制器 8259 芯片进行的编程
-    mov al,0x11        ; initialization sequence
-    out 0x20,al        ; send it to 8259A-1
-    .word   0x00eb,0x00eb       ; jmp $+2, jmp $+2
-    out 0xA0,al        ; and to 8259A-2
-    .word   0x00eb,0x00eb
-    mov al,0x20        ; start of hardware int's (0x20)
-    out 0x21,al
-    .word   0x00eb,0x00eb
-    mov al,0x28        ; start of hardware int's 2 (0x28)
-    out 0xA1,al
-    .word   0x00eb,0x00eb
-    mov al,0x04        ; 8259-1 is master
-    out 0x21,al
-    .word   0x00eb,0x00eb
-    mov al,0x02        ; 8259-2 is slave
-    out 0xA1,al
-    .word   0x00eb,0x00eb
-    mov al,0x01        ; 8086 mode for both
-    out 0x21,al
-    .word   0x00eb,0x00eb
-    out 0xA1,al
-    .word   0x00eb,0x00eb
-    mov al,0xFF        ; mask off all interrupts for now
-    out 0x21,al
-    .word   0x00eb,0x00eb
-    out 0xA1,al
+    ; 以下为打开32位保护模式的步骤
+    ; 设置gdt、idt
+    ; 打开 A20 地址线
+    ; 对可编程中断控制器 8259 芯片进行的编程
+    ; 切换32位保护模式
 
     sti
+
+    jmp 0:0            ; 跳转head.asm
+
+    times 512*4 - ($ - $$) db 0
