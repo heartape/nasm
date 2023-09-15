@@ -1,12 +1,14 @@
-SECTION .code vstart=0
-start_shell:
+SECTION code_shell vstart=0 align=16
+
+shell:
 
     mov ax,0b800h
 	mov es,ax
 
     call clear_all
 
-	jmp near ($)
+end_shell:
+	jmp end_shell
 
 clear_all:
 	xor di,di
@@ -29,19 +31,37 @@ init_line:
     mov ax,80
     mul bx
     mov bx,ax
-    ; 写入'>'标号
-    mov al,'>'
-	mov ah,0x7
-	mov [es:bx],ax
+    call write_line_prefix
     ; 写入光标
-    add bx,2
+    add bx,9
     jmp write_cursor
+
+    ret
+
+; 写入行前缀
+write_line_prefix:
+    mov ax,0x1001
+	mov ds,ax
+    xor si,si
+    xor di,di
+	mov cx,9
+            
+show_line_prefix:
+    ; 如果需要读取data，需要重定位表
+	; mov al,[si+line_prefix]
+	mov al,'#'
+	mov ah,0b00001111
+	mov [es:di],ax
+	inc si
+	add di,2
+	loop show_line_prefix
 
     ret
 
 ; 写入光标
 ; 参数bx：光标位置(0-1999)
 write_cursor:
+    push bx
     ;请求操作0x0e号寄存器
     mov dx,0x3d4
     mov al,0x0e
@@ -60,8 +80,14 @@ write_cursor:
     mov al,bl
     out dx,al
 
+    ;光标也需要写入样式
+    pop bx
+    shl bx,1
+    inc bx
+    mov byte [es:bx],0x0f
+
     ret
 
-SECTION .data vstart=0
+; SECTION data_1 align=16
 
-SECTION .stack vstart=0
+; line_prefix db '[root ~]#'

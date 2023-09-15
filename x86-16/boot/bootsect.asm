@@ -22,7 +22,7 @@ go:
 ;读取引导扇区后的4个扇区
 load_setup:
     ; bios在dl保存了驱动器号
-    mov dh,0x00   ; dh:磁头,dl:驱动器
+    mov dh,0x00     ; dh:磁头,dl:驱动器
     mov cx,0x0002   ; ch:磁道,cl:扇区号
     mov bx,0x0200   ; es:bx指向读入数据的内存地址，前面共有512个字节
     mov ax,0x0204   ; ah=2表示读，al:扇区数

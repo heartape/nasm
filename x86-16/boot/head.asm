@@ -10,9 +10,7 @@ start:
 	push 0
 	push 0
 	push L6		; return address for main, if it decides to.
-	push _main
+	push main
 	ret
 L6:
 	jmp L6
-
-	times 512*16 - ($ - $$) db 0
