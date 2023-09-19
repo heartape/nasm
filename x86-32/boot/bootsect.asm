@@ -39,11 +39,11 @@ ok_load_setup:
 load_system:
     ;mov dx,0x0000
     mov cx,0x0006
-    mov bx,0x0a00
+    mov bx,0x0000
     mov ax,0x0202
     int 0x13
     jnc ok_load_system
-    mov dx,0x0000
+    ; mov dx,0x0000
     mov ax,0x0000
     int 0x13
     jmp load_system

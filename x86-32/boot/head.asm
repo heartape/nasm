@@ -1,6 +1,6 @@
+[bits 32]
 start:
-	; 再次设置gdt、idt，因为之前的数据将要被覆盖
-	; todo:作为演示就不做了
+	; 再次设置gdt、idt，因为之前的数据将要被覆盖,这里没有需要就不做了
 
 	push 0		; These are the parameters to main :-)
 	push 0

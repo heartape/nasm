@@ -47,8 +47,6 @@ write_line_prefix:
 	mov cx,9
             
 show_line_prefix:
-    ; 如果需要读取data，需要重定位表
-	; mov al,[si+line_prefix]
 	mov al,'#'
 	mov ah,0b00001111
 	mov [es:di],ax
@@ -87,7 +85,3 @@ write_cursor:
     mov byte [es:bx],0x0f
 
     ret
-
-; SECTION data_1 align=16
-
-; line_prefix db '[root ~]#'

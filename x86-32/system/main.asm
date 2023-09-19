@@ -2,7 +2,7 @@
 SECTION code_shell vstart=512 align=16
 
 main:
-    mov eax,0x0008
+    mov eax,0x0010
 	mov es,eax
 
     call clear_all
@@ -13,10 +13,10 @@ end_shell:
 clear_all:
 	xor edi,edi
     mov ecx,2000
-            
+xchg bx, bx
 do_clear_all:
-    mov eax,0
-	mov [es:edi],eax
+    mov ax,0
+	mov [es:edi],ax
 	add edi,2
 	loop do_clear_all
 
@@ -33,22 +33,22 @@ init_line:
     mov ebx,eax
     call write_line_prefix
     ; 写入光标
-    add ebx,9
+    add ebx,19
     jmp write_cursor
 
     ret
 
 ; 写入行前缀
 write_line_prefix:
-    mov eax,0x1001
-	mov ds,eax
+    mov ax,0x08
+	mov ds,ax
     xor esi,esi
     xor edi,edi
-	mov ecx,9
+	mov ecx,19
             
 show_line_prefix:
     ; 如果需要读取data，需要重定位表
-	mov al,[si+prefix+0x200]
+	mov al,[si+prefix]
 	mov ah,0b00001111
 	mov [es:edi],ax
 	inc esi
@@ -88,6 +88,6 @@ write_cursor:
     ret
 
 prefix:
-    db '[root ~]#'
+    db '[root@localhost ~]#'
 
 times 512 - ($ - $$) db 0
