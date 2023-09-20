@@ -9,6 +9,7 @@ IF EXIST target (
 )
 cd target
 
+::新开窗口可以无需确认
 ::start powershell -Command D:\program\Bochs-2.7\bximage -q -hd=16M -func=create -sectsize=512 -imgmode=flat x86-16.img
 ::@ping 127.0.0.1 -n 5 > nul
 D:\program\Bochs-2.7\bximage -q -hd=16M -func=create -sectsize=512 -imgmode=flat x86-16.img
